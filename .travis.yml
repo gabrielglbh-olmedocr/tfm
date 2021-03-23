@@ -1,23 +1,13 @@
-
-# environment setup
+os: osx
 language: swift
 osx_image: xcode12.2
-# caching of dependencies
-cache:
-  bundler: true
-  directories:
 # branch safelist
 branches:
   only:
     - master
     - /^release\/.*$/
-# prepare dependency managers
-before_install:
-  - brew update
-  - gem install bundler -v "$(grep -A 1 "BUNDLED WITH" Gemfile.lock | tail -n 1)"
 # install dependencies
 install:
-  - travis_wait carthage bootstrap --platform iOS --cache-builds
   - bundle install
 # jobs and stages to run
 jobs:
