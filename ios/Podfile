@@ -1,0 +1,26 @@
+plugin 'cocoapods-binary'
+
+platform :ios, '14.0'
+use_frameworks!
+enable_bitcode_for_prebuilt_frameworks!
+keep_source_code_for_prebuilt_frameworks!
+all_binary!
+
+target 'Kelo' do
+  # Pods for Kelo
+
+  # Add the pods for any other Firebase products you want to use in your app
+  # For example, to use Firebase Authentication and Cloud Firestore
+  pod 'Firebase/Auth'
+  pod 'Firebase/Firestore'
+
+  target 'KeloTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+  target 'KeloUITests' do
+    # Pods for testing
+  end
+
+end
