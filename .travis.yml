@@ -6,6 +6,10 @@ branches:
   only:
     - master
     - /^release\/.*$/
+    
+before_install:
+  script: 
+    - cd ios/
 # install dependencies
 install:
   - bundle install
