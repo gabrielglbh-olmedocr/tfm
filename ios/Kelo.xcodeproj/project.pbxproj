@@ -3,13 +3,10 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5797A0FC429884C62DD59696 /* Pods_Kelo_KeloUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F9FB8751B971834D7E5EBE6 /* Pods_Kelo_KeloUITests.framework */; };
-		5FD5B0EE6BB3C956C482700A /* Pods_KeloTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7EE8FA6E3D9652A8E1158CC /* Pods_KeloTests.framework */; };
-		9B55B865D6DB7C53C52FFF69 /* Pods_Kelo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA807ED0632E01EF10ACE3 /* Pods_Kelo.framework */; };
 		C42F5E2F2609F3DB00818229 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42F5E2E2609F3DB00818229 /* AppDelegate.swift */; };
 		C42F5E312609F3DB00818229 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42F5E302609F3DB00818229 /* SceneDelegate.swift */; };
 		C42F5E332609F3DB00818229 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42F5E322609F3DB00818229 /* ViewController.swift */; };
@@ -19,6 +16,9 @@
 		C42F5E462609F3DC00818229 /* KeloTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42F5E452609F3DC00818229 /* KeloTests.swift */; };
 		C42F5E512609F3DC00818229 /* KeloUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42F5E502609F3DC00818229 /* KeloUITests.swift */; };
 		C42F5E682609FAD000818229 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C42F5E672609FAD000818229 /* GoogleService-Info.plist */; };
+		C42F6150260A161C00818229 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = C42F614F260A161C00818229 /* SwiftyBeaver */; };
+		C42F6156260A16B700818229 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = C42F6155260A16B700818229 /* FirebaseFirestore */; };
+		C42F6158260A16B700818229 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = C42F6157260A16B700818229 /* FirebaseAuth */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,14 +39,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		03376774E3891C7D70EB34FD /* Pods-Kelo-KeloUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kelo-KeloUITests.release.xcconfig"; path = "Target Support Files/Pods-Kelo-KeloUITests/Pods-Kelo-KeloUITests.release.xcconfig"; sourceTree = "<group>"; };
-		2B8EF254A3A1454F0BE30F0F /* Pods-KeloTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KeloTests.debug.xcconfig"; path = "Target Support Files/Pods-KeloTests/Pods-KeloTests.debug.xcconfig"; sourceTree = "<group>"; };
-		3715DE9423CCD182C47907A6 /* Pods-Kelo-KeloUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kelo-KeloUITests.debug.xcconfig"; path = "Target Support Files/Pods-Kelo-KeloUITests/Pods-Kelo-KeloUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		42EBBE2084C237472AE9FE0A /* Pods-Kelo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kelo.debug.xcconfig"; path = "Target Support Files/Pods-Kelo/Pods-Kelo.debug.xcconfig"; sourceTree = "<group>"; };
-		738A0E05096A7D413AC502F3 /* Pods-Kelo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Kelo.release.xcconfig"; path = "Target Support Files/Pods-Kelo/Pods-Kelo.release.xcconfig"; sourceTree = "<group>"; };
-		8ECA807ED0632E01EF10ACE3 /* Pods_Kelo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Kelo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		94E40F12AD655BAE53395D06 /* Pods-KeloTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KeloTests.release.xcconfig"; path = "Target Support Files/Pods-KeloTests/Pods-KeloTests.release.xcconfig"; sourceTree = "<group>"; };
-		9F9FB8751B971834D7E5EBE6 /* Pods_Kelo_KeloUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Kelo_KeloUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C42F5E2B2609F3DB00818229 /* Kelo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kelo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C42F5E2E2609F3DB00818229 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C42F5E302609F3DB00818229 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -62,7 +54,7 @@
 		C42F5E502609F3DC00818229 /* KeloUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeloUITests.swift; sourceTree = "<group>"; };
 		C42F5E522609F3DC00818229 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C42F5E672609FAD000818229 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		C7EE8FA6E3D9652A8E1158CC /* Pods_KeloTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KeloTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C42F616A260A1DBB00818229 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Kelo/Debug.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,7 +62,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9B55B865D6DB7C53C52FFF69 /* Pods_Kelo.framework in Frameworks */,
+				C42F6150260A161C00818229 /* SwiftyBeaver in Frameworks */,
+				C42F6158260A16B700818229 /* FirebaseAuth in Frameworks */,
+				C42F6156260A16B700818229 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,7 +72,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5FD5B0EE6BB3C956C482700A /* Pods_KeloTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,36 +79,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5797A0FC429884C62DD59696 /* Pods_Kelo_KeloUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5637650E53A75C9CC8B62E20 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				8ECA807ED0632E01EF10ACE3 /* Pods_Kelo.framework */,
-				9F9FB8751B971834D7E5EBE6 /* Pods_Kelo_KeloUITests.framework */,
-				C7EE8FA6E3D9652A8E1158CC /* Pods_KeloTests.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		8BE5ABE2E2849A8BB7B8BE3E /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				42EBBE2084C237472AE9FE0A /* Pods-Kelo.debug.xcconfig */,
-				738A0E05096A7D413AC502F3 /* Pods-Kelo.release.xcconfig */,
-				3715DE9423CCD182C47907A6 /* Pods-Kelo-KeloUITests.debug.xcconfig */,
-				03376774E3891C7D70EB34FD /* Pods-Kelo-KeloUITests.release.xcconfig */,
-				2B8EF254A3A1454F0BE30F0F /* Pods-KeloTests.debug.xcconfig */,
-				94E40F12AD655BAE53395D06 /* Pods-KeloTests.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		C42F5E222609F3DB00818229 = {
 			isa = PBXGroup;
 			children = (
@@ -123,8 +92,6 @@
 				C42F5E442609F3DC00818229 /* KeloTests */,
 				C42F5E4F2609F3DC00818229 /* KeloUITests */,
 				C42F5E2C2609F3DB00818229 /* Products */,
-				8BE5ABE2E2849A8BB7B8BE3E /* Pods */,
-				5637650E53A75C9CC8B62E20 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -141,14 +108,10 @@
 		C42F5E2D2609F3DB00818229 /* Kelo */ = {
 			isa = PBXGroup;
 			children = (
-				C42F5E2E2609F3DB00818229 /* AppDelegate.swift */,
-				C42F5E302609F3DB00818229 /* SceneDelegate.swift */,
-				C42F5E322609F3DB00818229 /* ViewController.swift */,
-				C42F5E342609F3DB00818229 /* Main.storyboard */,
-				C42F5E372609F3DC00818229 /* Assets.xcassets */,
-				C42F5E392609F3DC00818229 /* LaunchScreen.storyboard */,
-				C42F5E3C2609F3DC00818229 /* Info.plist */,
-				C42F5E672609FAD000818229 /* GoogleService-Info.plist */,
+				C42F615E260A17CA00818229 /* Controller */,
+				C42F615D260A17C600818229 /* View */,
+				C42F615C260A17BE00818229 /* Model */,
+				C42F615F260A17D500818229 /* Supporting Files */,
 			);
 			path = Kelo;
 			sourceTree = "<group>";
@@ -171,6 +134,43 @@
 			path = KeloUITests;
 			sourceTree = "<group>";
 		};
+		C42F615C260A17BE00818229 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		C42F615D260A17C600818229 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				C42F5E342609F3DB00818229 /* Main.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		C42F615E260A17CA00818229 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				C42F5E322609F3DB00818229 /* ViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		C42F615F260A17D500818229 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C42F616A260A1DBB00818229 /* Debug.xcconfig */,
+				C42F5E2E2609F3DB00818229 /* AppDelegate.swift */,
+				C42F5E302609F3DB00818229 /* SceneDelegate.swift */,
+				C42F5E392609F3DC00818229 /* LaunchScreen.storyboard */,
+				C42F5E372609F3DC00818229 /* Assets.xcassets */,
+				C42F5E3C2609F3DC00818229 /* Info.plist */,
+				C42F5E672609FAD000818229 /* GoogleService-Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -178,17 +178,21 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C42F5E552609F3DC00818229 /* Build configuration list for PBXNativeTarget "Kelo" */;
 			buildPhases = (
-				DFB7727619C4F64BD036F29C /* [CP] Check Pods Manifest.lock */,
+				C42F6163260A191400818229 /* ShellScript */,
 				C42F5E272609F3DB00818229 /* Sources */,
 				C42F5E282609F3DB00818229 /* Frameworks */,
 				C42F5E292609F3DB00818229 /* Resources */,
-				23FEBBF53644F20B4DA4C782 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = Kelo;
+			packageProductDependencies = (
+				C42F614F260A161C00818229 /* SwiftyBeaver */,
+				C42F6155260A16B700818229 /* FirebaseFirestore */,
+				C42F6157260A16B700818229 /* FirebaseAuth */,
+			);
 			productName = Kelo;
 			productReference = C42F5E2B2609F3DB00818229 /* Kelo.app */;
 			productType = "com.apple.product-type.application";
@@ -197,7 +201,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C42F5E582609F3DC00818229 /* Build configuration list for PBXNativeTarget "KeloTests" */;
 			buildPhases = (
-				9E4F50E6FC325F1552502B5E /* [CP] Check Pods Manifest.lock */,
 				C42F5E3D2609F3DC00818229 /* Sources */,
 				C42F5E3E2609F3DC00818229 /* Frameworks */,
 				C42F5E3F2609F3DC00818229 /* Resources */,
@@ -216,11 +219,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C42F5E5B2609F3DC00818229 /* Build configuration list for PBXNativeTarget "KeloUITests" */;
 			buildPhases = (
-				789DC6F125EB01377E37D4F8 /* [CP] Check Pods Manifest.lock */,
 				C42F5E482609F3DC00818229 /* Sources */,
 				C42F5E492609F3DC00818229 /* Frameworks */,
 				C42F5E4A2609F3DC00818229 /* Resources */,
-				BA2E29EE1B741F865B62D78A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -263,6 +264,10 @@
 				Base,
 			);
 			mainGroup = C42F5E222609F3DB00818229;
+			packageReferences = (
+				C42F614E260A161C00818229 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
+				C42F6154260A16B700818229 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = C42F5E2C2609F3DB00818229 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -303,105 +308,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		23FEBBF53644F20B4DA4C782 /* [CP] Embed Pods Frameworks */ = {
+		C42F6163260A191400818229 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Kelo/Pods-Kelo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Kelo/Pods-Kelo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Kelo/Pods-Kelo-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		789DC6F125EB01377E37D4F8 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
 			);
-			name = "[CP] Check Pods Manifest.lock";
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Kelo-KeloUITests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9E4F50E6FC325F1552502B5E /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-KeloTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		BA2E29EE1B741F865B62D78A /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Kelo-KeloUITests/Pods-Kelo-KeloUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Kelo-KeloUITests/Pods-Kelo-KeloUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Kelo-KeloUITests/Pods-Kelo-KeloUITests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		DFB7727619C4F64BD036F29C /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Kelo-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint autocorrect && swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -585,7 +508,6 @@
 		};
 		C42F5E562609F3DC00818229 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 42EBBE2084C237472AE9FE0A /* Pods-Kelo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -605,7 +527,6 @@
 		};
 		C42F5E572609F3DC00818229 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 738A0E05096A7D413AC502F3 /* Pods-Kelo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -625,7 +546,6 @@
 		};
 		C42F5E592609F3DC00818229 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2B8EF254A3A1454F0BE30F0F /* Pods-KeloTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -648,7 +568,6 @@
 		};
 		C42F5E5A2609F3DC00818229 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 94E40F12AD655BAE53395D06 /* Pods-KeloTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -671,7 +590,6 @@
 		};
 		C42F5E5C2609F3DC00818229 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3715DE9423CCD182C47907A6 /* Pods-Kelo-KeloUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -692,7 +610,6 @@
 		};
 		C42F5E5D2609F3DC00818229 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 03376774E3891C7D70EB34FD /* Pods-Kelo-KeloUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -751,6 +668,43 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C42F614E260A161C00818229 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyBeaver/SwiftyBeaver.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.9.3;
+			};
+		};
+		C42F6154260A16B700818229 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.8.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C42F614F260A161C00818229 /* SwiftyBeaver */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C42F614E260A161C00818229 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
+			productName = SwiftyBeaver;
+		};
+		C42F6155260A16B700818229 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C42F6154260A16B700818229 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		C42F6157260A16B700818229 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C42F6154260A16B700818229 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C42F5E232609F3DB00818229 /* Project object */;
 }

@@ -1,0 +1,11 @@
+//
+//  Config.xcconfig
+//  Kelo
+//
+//  Created by Raul Olmedo on 23/3/21.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+// TODO: https://medium.com/swift-india/secure-secrets-in-ios-app-9f66085800b4
