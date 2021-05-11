@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [ "Q26F7S66DB.com.raulolmedo.kelo" ],
+        "components": [
+          {
+            "/": "/group/*",
+            "comment": "Matches any URL whose path starts with /group/"
+          }
+        ]
+      }
+    ]
+  }
+}
