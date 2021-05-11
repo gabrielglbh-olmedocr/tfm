@@ -11,6 +11,11 @@
         "source": "/.well-known/assetlinks.json",
         "destination": "/.well-known/assetlinks.json",
         "type": 301
+      },
+      {
+        "source": "/.well-known/apple-app-site-association",
+        "destination": "/.well-known/apple-app-site-association",
+        "type": 301
       }
     ]
   }
