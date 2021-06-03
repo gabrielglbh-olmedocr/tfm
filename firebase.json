@@ -8,14 +8,27 @@
     ],
     "rewrites": [
       {
-        "source": "/.well-known/assetlinks.json",
+        "source": "**",
+        "destination": "/index.html"
+      },
+      {
+        "source": "**/assetlinks.json",
         "destination": "/.well-known/assetlinks.json",
         "type": 301
       },
       {
-        "source": "/.well-known/apple-app-site-association",
+        "source": "**/apple-app-site-association",
         "destination": "/.well-known/apple-app-site-association",
         "type": 301
+      }
+    ],
+    "headers": [ 
+      {
+        "source":"**/.well-known/**",
+        "headers":[{
+          "key":"Content-Type",
+          "value":"application/json"
+        }]
       }
     ]
   }
