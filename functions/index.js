@@ -75,42 +75,38 @@ exports.editChore = functions.firestore
 
       console.log("Updated chore with id: " + choreId);
 
-      // TODO: Mejorar el código un poco
-      const documentRef = database.collection("groups")
-          .doc(groupId).collection("users").doc(newChore.assignee);
+      if (newChore.isCompleted != oldChore.isCompleted &&
+        newChore.isCompleted && !oldChore.isCompleted) {
+        const creatorRef = database.collection("groups")
+            .doc(groupId).collection("users").doc(newChore.creator);
 
-      console.log("Got document reference pointing to user at " +
-            documentRef.path);
-
-      return documentRef.get()
-          .then((documentSnapshot) => {
-            if (documentSnapshot.exists) {
-              const user = documentSnapshot.data();
-              const userId = documentSnapshot.id;
-
-              console.log("Obtained user from chore: " + userId);
-
-              if (newChore.isCompleted != oldChore.isCompleted &&
-                  newChore.isCompleted && !oldChore.isCompleted) {
-                const creatorRef = database.collection("groups")
-                    .doc(groupId).collection("users").doc(newChore.creator);
-
-                creatorRef.get()
-                    .then((creatorSnapshot) => {
-                      if (creatorSnapshot.exists) {
-                        const creator = creatorSnapshot.data();
-                        message.token = creator.messagingToken;
-                        message.notification.title = "Completed chore!";
-                        message.notification.body =
-                            "The chore '" + newChore.name + "' was completed";
-                      } else {
-                        console.log("The snapshot did not exist");
-                      }
-                    })
-                    .catch((error) => {
-                      console.log("Error getting the user to notify: " + error);
-                    });
+        return creatorRef.get()
+            .then((creatorSnapshot) => {
+              if (creatorSnapshot.exists) {
+                const creator = creatorSnapshot.data();
+                message.token = creator.messagingToken;
+                message.notification.title = "Completed chore!";
+                message.notification.body =
+                    "The chore '" + newChore.name + "' was completed";
               } else {
+                console.log("The snapshot did not exist");
+              }
+            })
+            .catch((error) => {
+              console.log("Error getting the user to notify: " + error);
+            });
+      } else {
+        const documentRef = database.collection("groups")
+            .doc(groupId).collection("users").doc(newChore.assignee);
+
+        return documentRef.get()
+            .then((documentSnapshot) => {
+              if (documentSnapshot.exists) {
+                const user = documentSnapshot.data();
+                const userId = documentSnapshot.id;
+
+                console.log("Obtained user from chore: " + userId);
+
                 message.token = user.messagingToken;
                 message.notification.title = "Updated chore!";
 
@@ -157,24 +153,24 @@ exports.editChore = functions.firestore
                 message.notification.body =
                     "The chore '" + oldChore.name + "' was modified. " +
                     updatedFieldsMsg;
+
+                console.log("Sending message: " + JSON.stringify(message));
+
+                admin.messaging().send(message)
+                    .then((response) => {
+                      console.log("Successfully sent message: " + response);
+                    })
+                    .catch((error) => {
+                      console.log("Error sending notification: " + error);
+                    });
+              } else {
+                console.log("The snapshot did not exist");
               }
-
-              console.log("Sending message: " + JSON.stringify(message));
-
-              admin.messaging().send(message)
-                  .then((response) => {
-                    console.log("Successfully sent message: " + response);
-                  })
-                  .catch((error) => {
-                    console.log("Error sending notification: " + error);
-                  });
-            } else {
-              console.log("The snapshot did not exist");
-            }
-          })
-          .catch((error) => {
-            console.log("Error getting the user to notify: " + error);
-          });
+            })
+            .catch((error) => {
+              console.log("Error getting the user to notify: " + error);
+            });
+      }
     });
 
 exports.deleteChore = functions.firestore
