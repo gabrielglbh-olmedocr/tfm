@@ -44,7 +44,7 @@ exports.createChore = functions.firestore
               const expirationDate = chore.expiration.toDate().toDateString();
 
               message.notification.body =
-                  "You have been assigned to '" + chore.name + "' due to " +
+                  "You have been assigned to '" + chore.name + "' due " +
                   expirationDate;
 
               console.log("Sending message: " + JSON.stringify(message));
@@ -80,6 +80,9 @@ exports.editChore = functions.firestore
         const creatorRef = database.collection("groups")
             .doc(groupId).collection("users").doc(newChore.creator);
 
+        console.log("Got document reference pointing to user at " +
+        creatorRef.path);
+
         return creatorRef.get()
             .then((creatorSnapshot) => {
               if (creatorSnapshot.exists) {
@@ -88,6 +91,14 @@ exports.editChore = functions.firestore
                 message.notification.title = "Completed chore!";
                 message.notification.body =
                     "The chore '" + newChore.name + "' was completed";
+
+                admin.messaging().send(message)
+                    .then((response) => {
+                      console.log("Successfully sent message: " + response);
+                    })
+                    .catch((error) => {
+                      console.log("Error sending notification: " + error);
+                    });
               } else {
                 console.log("The snapshot did not exist");
               }
@@ -216,5 +227,46 @@ exports.deleteChore = functions.firestore
           })
           .catch((error) => {
             console.log("Error getting the user to notify: " + error);
+          });
+    });
+
+exports.scheduledChoreExpirationCrontab = functions.pubsub
+    .schedule("0 10 * * *")
+    //.schedule("* * * * *")
+    .timeZone("Europe/Madrid")
+    .onRun((context) => {
+      const groupRef = database.collection("groups");
+
+      return groupRef.get()
+          .then((groupsSnapshot) => {
+            // const today = new Date();
+            // const tomorrow = today + 1;
+            // const yesterday = today - 1;
+
+            const promises = [];
+            groupsSnapshot.forEach((groupSnapshot) => {
+              if (groupSnapshot.exists) {
+                const choresRef = groupRef
+                    .doc(groupSnapshot.ref.id)
+                    .collection("chores")
+                // .where("expiration", "<", tomorrow);
+                // .where("expiration", ">", yesterday)
+                // .where("isCompleted", "==", false);
+
+                console.log("Got reference for group: " + choresRef.path);
+                promises.push(choresRef.get());
+              }
+            });
+            console.log("Returned promises: " + promises);
+            return Promise.all(promises);
+          })
+          .then((choresSnapshot) => {
+            choresSnapshot.forEach((choreSnapshot) => {
+              // const chore = choreSnapshot.data();
+              // TODO: mandar notificacion
+            });
+          })
+          .catch((error) => {
+            console.log("Error getting the group snapshot: " + error);
           });
     });
