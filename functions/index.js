@@ -242,9 +242,13 @@ exports.scheduledChoreExpirationCrontab = functions.pubsub
       const groupsSnapshot = await groupRef.get();
 
       const dayInMillis = 24 * 60 * 60 * 1000;
-      const today = Date.now();
-      const tomorrow = today + dayInMillis;
-      const yesterday = today - dayInMillis;
+      const now = Date.now();
+      const todayDate = new Date(Date.now());
+      const tomorrowDate = new Date(now + dayInMillis);
+      const yesterdayDate = new Date(now - dayInMillis);
+
+      const tomorrowTimestamp = admin.firestore.Timestamp.fromDate(tomorrowDate);
+      const yesterdayTimestamp = admin.firestore.Timestamp.fromDate(yesterdayDate);
 
       const chorePromises = [];
       const userPromises = [];
@@ -257,9 +261,8 @@ exports.scheduledChoreExpirationCrontab = functions.pubsub
           const choresRef = groupRef
             .doc(groupSnapshot.ref.id)
             .collection("chores")
-            // FIXME: no hace bien los wheres creo
-            // .where("expiration", ">", yesterday)
-            // .where("expiration", "<", tomorrow)
+            .where("expiration", ">", yesterdayTimestamp)
+            .where("expiration", "<", tomorrowTimestamp)
             .where("isCompleted", "==", false);
 
           const promise = choresRef.get();
@@ -270,19 +273,25 @@ exports.scheduledChoreExpirationCrontab = functions.pubsub
       const choresSnapshotPromises = await Promise.all(chorePromises);
 
       choresSnapshotPromises.forEach((choresSnapshot) => {
+        console.log("CHORES LENGHT: " + choresSnapshot.length);
         choresSnapshot.forEach((choreSnapshot) => {
           chore = choreSnapshot.data();
+          const expirationDate = new Date(chore.expiration.toMillis()).toDateString();
           const userRef = choreSnapshot.ref
             .parent.parent
             .collection("users")
             .doc(chore.assignee);
 
-          // FIXME: no se en que esta expiration, habira que poner los otros epoch en el mismo formato
           console.log("chore: " + JSON.stringify(chore));
-          console.log("expiration: " + chore.expiration);
-          console.log("today's epoch: " + today);
-          console.log("tomorrow's epoch: " + tomorrow);
-          console.log("yesterday's epoch: " + yesterday);
+
+          console.log("AS DATE: expiration: " + expirationDate);
+          console.log("AS DATE: today's epoch: " + todayDate.toDateString());
+          console.log("AS DATE: tomorrow's epoch: " + tomorrowDate.toDateString());
+          console.log("AS DATE: yesterday's epoch: " + yesterdayDate.toDateString());
+
+          console.log("AS TIMESTAMP: expiration's epoch: " + chore.expiration);
+          console.log("AS TIMESTAMP: tomorrow's epoch: " + tomorrowTimestamp);
+          console.log("AS TIMESTAMP: yesterday's epoch: " + yesterdayTimestamp);
 
           const promise = userRef.get();
           userPromises.push(promise)
