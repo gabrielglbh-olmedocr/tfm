@@ -232,8 +232,7 @@ exports.deleteChore = functions.firestore
   });
 
 exports.scheduledChoreExpirationCrontab = functions.pubsub
-  // .schedule("0 10 * * *")
-  .schedule("* * * * *")
+  .schedule("0 10 * * *")
   .timeZone("Europe/Madrid")
   .onRun(async (context) => {
     const groupRef = database.collection("groups");
@@ -243,7 +242,6 @@ exports.scheduledChoreExpirationCrontab = functions.pubsub
 
       const dayInMillis = 24 * 60 * 60 * 1000;
       const now = Date.now();
-      const todayDate = new Date(Date.now());
       const tomorrowDate = new Date(now + dayInMillis);
       const yesterdayDate = new Date(now - dayInMillis);
 
@@ -252,9 +250,7 @@ exports.scheduledChoreExpirationCrontab = functions.pubsub
 
       const chorePromises = [];
       const userPromises = [];
-
-      // FIXME: esto no vale porque hay varios chores, 
-      let chore;
+      const chores = [];
 
       groupsSnapshot.forEach((groupSnapshot) => {
         if (groupSnapshot.exists) {
@@ -273,10 +269,9 @@ exports.scheduledChoreExpirationCrontab = functions.pubsub
       const choresSnapshotPromises = await Promise.all(chorePromises);
 
       choresSnapshotPromises.forEach((choresSnapshot) => {
-        console.log("CHORES LENGHT: " + choresSnapshot.length);
         choresSnapshot.forEach((choreSnapshot) => {
-          chore = choreSnapshot.data();
-          const expirationDate = new Date(chore.expiration.toMillis()).toDateString();
+          const chore = choreSnapshot.data();
+          chores.push(chore);
           const userRef = choreSnapshot.ref
             .parent.parent
             .collection("users")
@@ -284,39 +279,36 @@ exports.scheduledChoreExpirationCrontab = functions.pubsub
 
           console.log("chore: " + JSON.stringify(chore));
 
-          console.log("AS DATE: expiration: " + expirationDate);
-          console.log("AS DATE: today's epoch: " + todayDate.toDateString());
-          console.log("AS DATE: tomorrow's epoch: " + tomorrowDate.toDateString());
-          console.log("AS DATE: yesterday's epoch: " + yesterdayDate.toDateString());
-
           console.log("AS TIMESTAMP: expiration's epoch: " + chore.expiration);
           console.log("AS TIMESTAMP: tomorrow's epoch: " + tomorrowTimestamp);
           console.log("AS TIMESTAMP: yesterday's epoch: " + yesterdayTimestamp);
 
           const promise = userRef.get();
-          userPromises.push(promise)
+          userPromises.push(promise);
         })
       });
 
       const userSnapshotPromises = await Promise.all(userPromises);
 
-      userSnapshotPromises.forEach((userSnapshot) => {
+      userSnapshotPromises.forEach((userSnapshot, index) => {
         const user = userSnapshot.data();
 
-        message.token = user.messagingToken;
-        message.notification.title = "Chore expires today!";
-        message.notification.body =
-          "The chore '" + chore.name + "' is about to expire";
+        if (user != undefined) {
+          message.token = user.messagingToken;
+          message.notification.title = "Chore expires today!";
+          message.notification.body =
+            "The chore '" + chores[index].name + "' is about to expire";
 
-        console.log("Sending message: " + JSON.stringify(message));
+          console.log("Sending message: " + JSON.stringify(message));
 
-        admin.messaging().send(message)
-          .then((response) => {
-            console.log("Successfully sent message: " + response);
-          })
-          .catch((error) => {
-            console.log("Error sending notification: " + error);
-          });
+          admin.messaging().send(message)
+            .then((response) => {
+              console.log("Successfully sent message: " + response);
+            })
+            .catch((error) => {
+              console.log("Error sending notification: " + error);
+            });
+        }
       })
 
     } catch (error) {
