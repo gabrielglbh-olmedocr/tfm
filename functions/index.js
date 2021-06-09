@@ -242,11 +242,8 @@ exports.scheduledChoreExpirationCrontab = functions.pubsub
 
       const dayInMillis = 24 * 60 * 60 * 1000;
       const now = Date.now();
-      const tomorrowDate = new Date(now + dayInMillis);
+      const todayDate = new Date(now);
       const yesterdayDate = new Date(now - dayInMillis);
-
-      const tomorrowTimestamp = admin.firestore.Timestamp.fromDate(tomorrowDate);
-      const yesterdayTimestamp = admin.firestore.Timestamp.fromDate(yesterdayDate);
 
       const chorePromises = [];
       const userPromises = [];
@@ -257,8 +254,6 @@ exports.scheduledChoreExpirationCrontab = functions.pubsub
           const choresRef = groupRef
             .doc(groupSnapshot.ref.id)
             .collection("chores")
-            .where("expiration", ">", yesterdayTimestamp)
-            .where("expiration", "<", tomorrowTimestamp)
             .where("isCompleted", "==", false);
 
           const promise = choresRef.get();
@@ -271,20 +266,33 @@ exports.scheduledChoreExpirationCrontab = functions.pubsub
       choresSnapshotPromises.forEach((choresSnapshot) => {
         choresSnapshot.forEach((choreSnapshot) => {
           const chore = choreSnapshot.data();
-          chores.push(chore);
-          const userRef = choreSnapshot.ref
-            .parent.parent
-            .collection("users")
-            .doc(chore.assignee);
+          const expirationDate = chore.expiration.toDate();
 
-          console.log("chore: " + JSON.stringify(chore));
+          const yesterdayDay = yesterdayDate.getDate();
+          const yesterdayMonth = yesterdayDate.getMonth() + 1;
+          const yesterdayYear = yesterdayDate.getFullYear();
 
-          console.log("AS TIMESTAMP: expiration's epoch: " + chore.expiration);
-          console.log("AS TIMESTAMP: tomorrow's epoch: " + tomorrowTimestamp);
-          console.log("AS TIMESTAMP: yesterday's epoch: " + yesterdayTimestamp);
+          const expireDay = expirationDate.getDate();
+          const expireMonth = expirationDate.getMonth() + 1;
+          const expireYear = expirationDate.getFullYear();
 
-          const promise = userRef.get();
-          userPromises.push(promise);
+          const todayDay = todayDate.getDate();
+          const todayMonth = todayDate.getMonth() + 1;
+          const todayYear = todayDate.getFullYear();
+
+          if ((yesterdayYear == expireYear && yesterdayMonth == expireMonth && 
+               yesterdayDay < expireDay) && 
+              (todayYear == expireYear && todayMonth == expireMonth && 
+               todayDay == expireDay)) {
+            chores.push(chore);
+            const userRef = choreSnapshot.ref
+              .parent.parent
+              .collection("users")
+              .doc(chore.assignee);
+
+            const promise = userRef.get();
+            userPromises.push(promise);
+          }
         })
       });
 
