@@ -230,4 +230,6 @@ xcuserdata
 # End of https://www.toptal.com/developers/gitignore/api/macos,swift,swiftpm,appcode+all,xcode
 
 tester_import.csv
-.firebase/hosting.*.cache
+.firebase/
+kelo-64c5c-9f0a7f6f8878.json
+*.log
