@@ -4,6 +4,3 @@
 [submodule "android"]
 	path = android
 	url = git@github.com:gabrielglbh/tfm-android.git
-[submodule "automatic-app-landing-page"]
-	path = automatic-app-landing-page
-	url = git@github.com:olmedocr/automatic-app-landing-page.git
