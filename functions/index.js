@@ -242,11 +242,8 @@ exports.scheduledChoreExpirationCrontab = functions.pubsub
 
       const dayInMillis = 24 * 60 * 60 * 1000;
       const now = Date.now();
-      const tomorrowDate = new Date(now + dayInMillis);
+      const todayDate = new Date(now);
       const yesterdayDate = new Date(now - dayInMillis);
-
-      const tomorrowTimestamp = admin.firestore.Timestamp.fromDate(tomorrowDate);
-      const yesterdayTimestamp = admin.firestore.Timestamp.fromDate(yesterdayDate);
 
       const chorePromises = [];
       const userPromises = [];
@@ -257,8 +254,6 @@ exports.scheduledChoreExpirationCrontab = functions.pubsub
           const choresRef = groupRef
             .doc(groupSnapshot.ref.id)
             .collection("chores")
-            .where("expiration", ">", yesterdayTimestamp)
-            .where("expiration", "<", tomorrowTimestamp)
             .where("isCompleted", "==", false);
 
           const promise = choresRef.get();
@@ -271,20 +266,33 @@ exports.scheduledChoreExpirationCrontab = functions.pubsub
       choresSnapshotPromises.forEach((choresSnapshot) => {
         choresSnapshot.forEach((choreSnapshot) => {
           const chore = choreSnapshot.data();
-          chores.push(chore);
-          const userRef = choreSnapshot.ref
-            .parent.parent
-            .collection("users")
-            .doc(chore.assignee);
+          const expirationDate = chore.expiration.toDate();
 
-          console.log("chore: " + JSON.stringify(chore));
+          const yesterdayDay = yesterdayDate.getDate();
+          const yesterdayMonth = yesterdayDate.getMonth() + 1;
+          const yesterdayYear = yesterdayDate.getFullYear();
 
-          console.log("AS TIMESTAMP: expiration's epoch: " + chore.expiration);
-          console.log("AS TIMESTAMP: tomorrow's epoch: " + tomorrowTimestamp);
-          console.log("AS TIMESTAMP: yesterday's epoch: " + yesterdayTimestamp);
+          const expireDay = expirationDate.getDate();
+          const expireMonth = expirationDate.getMonth() + 1;
+          const expireYear = expirationDate.getFullYear();
 
-          const promise = userRef.get();
-          userPromises.push(promise);
+          const todayDay = todayDate.getDate();
+          const todayMonth = todayDate.getMonth() + 1;
+          const todayYear = todayDate.getFullYear();
+
+          if ((yesterdayYear == expireYear && yesterdayMonth == expireMonth &&
+            yesterdayDay < expireDay) &&
+            (todayYear == expireYear && todayMonth == expireMonth &&
+              todayDay == expireDay)) {
+            chores.push(chore);
+            const userRef = choreSnapshot.ref
+              .parent.parent
+              .collection("users")
+              .doc(chore.assignee);
+
+            const promise = userRef.get();
+            userPromises.push(promise);
+          }
         })
       });
 
@@ -316,9 +324,8 @@ exports.scheduledChoreExpirationCrontab = functions.pubsub
     }
   });
 
-//exports.scheduledGroupCleanup = functions.https.onCall(async (data, context) => {
 exports.scheduledGroupCleanup = functions.pubsub
-  .schedule("* * * * *")
+  .schedule("0 4 * * *")
   .timeZone("Europe/Madrid")
   .onRun(async (context) => {
     const groupsRef = database.collection("groups");
@@ -376,5 +383,120 @@ exports.scheduledGroupCleanup = functions.pubsub
 
     } catch (error) {
       console.log("Error deleting empty groups: " + error);
+    }
+  });
+
+exports.scheduledRewardCheck = functions.pubsub
+  .schedule("0 11 * * *")
+  .timeZone("Europe/Madrid")
+  .onRun(async (context) => {
+    const groupRef = database.collection("groups");
+
+    const weekInMillis = 604800000;
+    const twoWeekInMillis = 1209600000;
+    const monthInMillis = 2629800000;
+    const twoMonthInMillis = 5259600000;
+    const yearInMillis = 31557600000;
+    const todayDate = new Date(Date.now());
+
+    const rewardsPromises = [];
+    const userPromises = [];
+    const rewards = [];
+
+    try {
+      const groupsSnapshot = await groupRef.get();
+
+      groupsSnapshot.forEach((groupSnapshot) => {
+        if (groupSnapshot.exists) {
+          const rewardsRef = groupRef
+            .doc(groupSnapshot.ref.id)
+            .collection("rewards");
+
+          const promise = rewardsRef.get();
+          rewardsPromises.push(promise);
+        }
+      });
+
+      const rewardsSnapshotPromises = await Promise.all(rewardsPromises);
+
+      rewardsSnapshotPromises.forEach((rewardsSnapshot) => {
+        rewardsSnapshot.forEach((rewardSnapshot) => {
+          const reward = rewardSnapshot.data();
+          if (reward.expiration != null) {
+            const expirationDate = reward.expiration.toDate();
+
+            const expireDay = expirationDate.getDate();
+            const expireMonth = expirationDate.getMonth() + 1;
+            const expireYear = expirationDate.getFullYear();
+
+            const todayDay = todayDate.getDate();
+            const todayMonth = todayDate.getMonth() + 1;
+            const todayYear = todayDate.getFullYear();
+
+            if ((todayYear == expireYear && todayMonth == expireMonth &&
+              todayDay == expireDay && reward.frequency != 0)) {
+              rewards.push(reward);
+              console.log("Reward: " + reward.name);
+              let newFreq;
+              switch (reward.frequency) {
+                case 1:
+                  newFreq = new Date(Date.now() + weekInMillis);
+                  break;
+                case 2:
+                  newFreq = new Date(Date.now() + twoWeekInMillis);
+                  break;
+                case 3:
+                  newFreq = new Date(Date.now() + monthInMillis);
+                  break;
+                case 4:
+                  newFreq = new Date(Date.now() + twoMonthInMillis);
+                  break;
+                case 5:
+                  newFreq = new Date(Date.now() + yearInMillis);
+                  break;
+              }
+
+              rewardSnapshot.ref.update({
+                "creation": todayDate,
+                "expiration": newFreq
+              });
+
+              const userRef = rewardSnapshot.ref
+                .parent.parent
+                .collection("users")
+                .orderBy("points", "desc")
+                .limit(1);
+
+              const promise = userRef.get();
+              userPromises.push(promise);
+            }
+          }
+        })
+      });
+
+      const usersSnapshotPromises = await Promise.all(userPromises);
+
+      usersSnapshotPromises.forEach((usersSnapshot, index) => {
+        usersSnapshot.forEach((userSnapshot) => {
+          const user = userSnapshot.data();
+          message.token = user.messagingToken;
+          message.notification.title = "You have won the reward!";
+          message.notification.body = "'" + rewards[index].name + "' is for you to claim! Congratulations for " +
+            " doing the most work in your group! " +
+            "The reward has been reset according to its frequency.";
+
+          console.log("Sending message: " + JSON.stringify(message));
+
+          admin.messaging().send(message)
+            .then((response) => {
+              console.log("Successfully sent message: " + response);
+            })
+            .catch((error) => {
+              console.log("Error sending notification: " + error);
+            });
+        });
+      });
+    } catch (error) {
+      console.log("Error getting the group snapshot: " + error);
     }
   });
