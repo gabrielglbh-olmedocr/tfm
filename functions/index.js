@@ -1,6 +1,6 @@
 const admin = require("firebase-admin");
 const functions = require("firebase-functions");
-const { user } = require("firebase-functions/lib/providers/auth");
+const user = require("firebase-functions/lib/providers/auth");
 
 admin.initializeApp({
   databaseURL: "https://kelo-64c5c.firebaseio.com",
@@ -235,10 +235,10 @@ exports.scheduledChoreExpirationCrontab = functions.pubsub
   .schedule("0 10 * * *")
   .timeZone("Europe/Madrid")
   .onRun(async (context) => {
-    const groupRef = database.collection("groups");
+    const groupsRef = database.collection("groups");
 
     try {
-      const groupsSnapshot = await groupRef.get();
+      const groupsSnapshot = await groupsRef.get();
 
       const dayInMillis = 24 * 60 * 60 * 1000;
       const now = Date.now();
@@ -313,5 +313,68 @@ exports.scheduledChoreExpirationCrontab = functions.pubsub
 
     } catch (error) {
       console.log("Error getting the group snapshot: " + error);
+    }
+  });
+
+//exports.scheduledGroupCleanup = functions.https.onCall(async (data, context) => {
+exports.scheduledGroupCleanup = functions.pubsub
+  .schedule("* * * * *")
+  .timeZone("Europe/Madrid")
+  .onRun(async (context) => {
+    const groupsRef = database.collection("groups");
+
+    try {
+      const groupsSnapshot = await groupsRef.get();
+
+      const groupsRefArray = [];
+      const groupsRefsToDelete = [];
+      const promises = [];
+      const groupPromises = [];
+
+      groupsSnapshot.forEach((groupSnapshot) => {
+        if (groupSnapshot.exists) {
+          const usersRef = groupsRef
+            .doc(groupSnapshot.ref.id)
+            .collection("users")
+            .limit(1);
+
+          const promise = usersRef.get();
+          groupPromises.push(promise);
+          groupsRefArray.push(groupSnapshot.ref);
+        }
+      });
+
+      const groupsQuerySnapshot = await Promise.all(groupPromises);
+
+      //console.log("groupsQuerySnapshot: " + JSON.stringify(groupsQuerySnapshot));
+
+
+      groupsQuerySnapshot.forEach((usersQuerySnapshot, index) => {
+        if (usersQuerySnapshot.empty) {
+          groupsRefsToDelete.push(groupsRefArray[index])
+        }
+      });
+
+      groupsRefsToDelete.forEach((groupRef) => {
+        const bulkWriter = database.bulkWriter();
+        bulkWriter
+          .onWriteError((error) => {
+            if (
+              error.failedAttempts < MAX_RETRY_ATTEMPTS
+            ) {
+              return true;
+            } else {
+              console.log('Failed write at document: ', error.documentRef.path);
+              return false;
+            }
+          });
+        const promise = database.recursiveDelete(groupRef, bulkWriter);
+        promises.push()
+      });
+
+      await Promise.all(promises)
+
+    } catch (error) {
+      console.log("Error deleting empty groups: " + error);
     }
   });
