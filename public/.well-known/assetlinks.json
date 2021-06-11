@@ -1,9 +1,0 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "com.gabr.gabc.kelo",
-    "sha256_cert_fingerprints":
-    ["2F:5E:D3:E3:AC:3B:61:BD:AD:32:EA:B5:53:8A:1A:6A:F8:64:29:4D:8A:21:DB:A7:20:F8:DF:92:A2:04:BA:8B"]
-  }
-}]
