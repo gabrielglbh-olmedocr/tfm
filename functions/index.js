@@ -23,24 +23,16 @@ exports.createChore = functions.firestore
     const choreId = context.params.choreId
     const chore = snap.data()
 
-    console.log("Created chore with id: " + choreId)
-
     const documentRef = database.collection("groups")
       .doc(groupId).collection("users").doc(chore.assignee)
-
-    console.log("Got document reference pointing to user at " +
-      documentRef.path)
 
     try {
       const documentSnapshot = await documentRef.get()
       if (documentSnapshot.exists) {
         const user = documentSnapshot.data()
-        const userId = documentSnapshot.id
-
-        console.log("Obtained user from chore: " + userId)
 
         message.token = user.messagingToken
-        message.notification.title = "New chore to do!"
+        message.notification.title = "You have a new chore to do!"
 
         const expirationDate = chore.expiration.toDate().toDateString()
 
@@ -69,28 +61,22 @@ exports.editChore = functions.firestore
   .document("groups/{groupId}/chores/{choreId}")
   .onUpdate(async (change, context) => {
     const groupId = context.params.groupId
-    const choreId = context.params.choreId
     const newChore = change.after.data()
     const oldChore = change.before.data()
-
-    console.log("Updated chore with id: " + choreId)
 
     if (newChore.isCompleted != oldChore.isCompleted &&
       newChore.isCompleted && !oldChore.isCompleted) {
       const creatorRef = database.collection("groups")
         .doc(groupId).collection("users").doc(newChore.creator)
 
-      console.log("Got document reference pointing to user at " +
-        creatorRef.path)
-
       try {
         const creatorSnapshot = await creatorRef.get()
         if (creatorSnapshot.exists) {
           const creator = creatorSnapshot.data()
           message.token = creator.messagingToken
-          message.notification.title = "Completed chore!"
+          message.notification.title = "Your chore has been completed!"
           message.notification.body =
-            "The chore '" + newChore.name + "' was completed"
+            "The chore '" + newChore.name + "' was completed by its assignee"
 
           admin.messaging().send(message)
             .then((response) => {
@@ -113,12 +99,9 @@ exports.editChore = functions.firestore
         const documentSnapshot = await documentRef.get()
         if (documentSnapshot.exists) {
           const user = documentSnapshot.data()
-          const userId = documentSnapshot.id
-
-          console.log("Obtained user from chore: " + userId)
 
           message.token = user.messagingToken
-          message.notification.title = "Updated chore!"
+          message.notification.title = "A chore has been modified!"
 
           let updatedFieldsMsg = "The "
           const changedFields = []
@@ -184,29 +167,20 @@ exports.deleteChore = functions.firestore
   .document("groups/{groupId}/chores/{choreId}")
   .onDelete(async (snap, context) => {
     const groupId = context.params.groupId
-    const choreId = context.params.choreId
     const chore = snap.data()
-
-    console.log("Deleted chore with id: " + choreId)
 
     const documentRef = database.collection("groups")
       .doc(groupId).collection("users").doc(chore.assignee)
-
-    console.log("Got document reference pointing to user at " +
-      documentRef.path)
 
     try {
       const documentSnapshot = await documentRef.get()
       if (documentSnapshot.exists) {
         const user = documentSnapshot.data()
-        const userId = documentSnapshot.id
-
-        console.log("Obtained user from chore: " + userId)
 
         message.token = user.messagingToken
-        message.notification.title = "Deleted chore!"
+        message.notification.title = "A chore has been deleted!"
         message.notification.body =
-          "The chore '" + chore.name + "' was deleted"
+          "The chore '" + chore.name + "' was deleted. You will not have to do it... yet."
 
         console.log("Sending message: " + JSON.stringify(message))
 
@@ -225,13 +199,132 @@ exports.deleteChore = functions.firestore
     }
   })
 
-exports.resetPoints = functions.firestore
-  .document("groups/{groupId}/rewards/{rewardId}")
+exports.createReward = functions.firestore
+  .document("groups/{groupId}/rewards/{rewardId}")  
+  .onCreate(async (snap, context) => {
+    const groupId = context.params.groupId
+    const reward = snap.data()
+
+    const usersRef = database.collection("groups")
+      .doc(groupId).collection("users").where("isAdmin", "==", false)
+
+    try {
+      const documentSnapshot = await usersRef.get()
+      documentSnapshot.docs.forEach((doc) => {
+        if (doc.exists) {
+          const user = doc.data()
+    
+          message.token = user.messagingToken
+          message.notification.title = "The admin has created a new reward!"  
+
+          let freq = ""
+          switch (reward.frequency) {
+            case 1:
+              freq = "every week"
+              break
+            case 2:
+              freq = "every two weeks"
+              break
+            case 3:
+              freq = "every month"
+              break
+            case 4:
+              freq = "every two months"
+              break
+            case 5:
+              freq = "every year"
+              break
+          }
+
+          message.notification.body = "'" + reward.name + "' is for you to claim " + 
+              freq + ". You must have the most points in your group to get it."
+  
+          console.log("Sending message: " + JSON.stringify(message))
+  
+          admin.messaging().send(message)
+            .then((response) => {
+              console.log("Successfully sent message: " + response)
+            })
+            .catch((error) => {
+              console.log("Error sending notification: " + error)
+            })
+        } else {
+          console.log("The snapshot did not exist")
+        }
+      })
+    } catch (error_1) {
+      console.log("Error getting the user to notify: " + error_1)
+    }
+  })
+
+exports.editReward = functions.firestore
+  .document("groups/{groupId}/rewards/{rewardId}")  
   .onUpdate(async (change, context) => {
+    const groupId = context.params.groupId
     const newReward = change.after.data()
     const oldReward = change.before.data()
 
-    if (newReward.creation != oldReward.creation) {
+    if (newReward.name != oldReward.name || newReward.frequency != oldReward.frequency) {
+      const usersRef = database.collection("groups")
+          .doc(groupId).collection("users").where("isAdmin", "==", false)
+
+      try {
+        const documentSnapshot = await usersRef.get()
+        documentSnapshot.docs.forEach((doc) => {
+          if (doc.exists) {
+            const user = doc.data()
+
+            message.token = user.messagingToken
+            message.notification.title = "The admin has updated the reward!"
+
+            const updatedRewardFields = []
+            let msg = "The "
+
+            if (oldReward.name != newReward.name) {
+              updatedRewardFields.push("Description")
+            }
+            if (oldReward.frequency != newReward.frequency) {
+              updatedRewardFields.push("Frequency")
+            }
+
+            for (let x = 0; x < updatedRewardFields.length; x++) {
+              if (x == updatedRewardFields.length - 2) {
+                msg = msg.concat(updatedRewardFields[x] + " and ")
+              } else if (x != updatedRewardFields.length - 1) {
+                msg = msg.concat(updatedRewardFields[x] + ", ")
+              } else {
+                msg = msg.concat(updatedRewardFields[x])
+              }
+            }
+
+            if (updatedRewardFields.length >= 2) {
+              msg = msg.concat(" were updated.")
+            } else if (updatedRewardFields.length == 1) {
+              msg = msg.concat(" was updated.")
+            } else {
+              msg = ""
+            }
+
+            message.notification.body = "The reward '" + oldReward.name + 
+                "' was modified. " + msg
+
+            console.log("Sending message: " + JSON.stringify(message))
+      
+            admin.messaging().send(message)
+              .then((response) => {
+                console.log("Successfully sent message: " + response)
+              })
+              .catch((error) => {
+                console.log("Error sending notification: " + error)
+              })
+          } else {
+            console.log("The snapshot did not exist")
+          }
+        })
+      } catch (error_1) {
+        console.log("Error getting the user to notify: " + error_1)
+      }
+    } else if (newReward.creation != oldReward.creation) {
       const usersSnapshot = await change.after.ref.parent.parent.collection("users").get()
 
       usersSnapshot.forEach((userDocumentSnapshot) => {
@@ -253,12 +346,45 @@ exports.resetPoints = functions.firestore
           .catch((error) => {
             console.log("Error sending notification: " + error)
           })
-
       })
     }
+  }) 
 
+exports.deleteReward = functions.firestore
+  .document("groups/{groupId}/rewards/{rewardId}")  
+  .onDelete(async (snap, context) => {
+    const groupId = context.params.groupId
+    const reward = snap.data()
+
+    const documentRef = database.collection("groups")
+        .doc(groupId).collection("users").where("isAdmin", "==", false)
+
+    try {
+      const documentSnapshot = await documentRef.get()
+      documentSnapshot.docs.forEach((doc) => {
+        if (doc.exists) {
+          const user = doc.data()
+    
+          message.token = user.messagingToken
+          message.notification.title = "The reward has been deleted!"
+          message.notification.body =
+            "The reward '" + reward.name + "' was deleted but keep up the good work!"
+    
+          admin.messaging().send(message)
+            .then((response) => {
+              console.log("Successfully sent message: " + response)
+            })
+            .catch((error) => {
+              console.log("Error sending notification: " + error)
+            })
+        } else {
+          console.log("The snapshot did not exist")
+        }
+      })
+    } catch (error_1) {
+      console.log("Error getting the user to notify: " + error_1)
+    }
   })
-
 
 exports.scheduledChoreExpirationCrontab = functions.pubsub
   .schedule("0 10 * * *")
@@ -332,9 +458,9 @@ exports.scheduledChoreExpirationCrontab = functions.pubsub
 
         if (user != undefined) {
           message.token = user.messagingToken
-          message.notification.title = "Chore expires today!"
+          message.notification.title = "The chore expires today!"
           message.notification.body =
-            "The chore '" + chores[index].name + "' is about to expire"
+            "The chore '" + chores[index].name + "' is about to expire. You better get it done!"
 
           console.log("Sending message: " + JSON.stringify(message))
 
@@ -381,9 +507,6 @@ exports.scheduledGroupCleanup = functions.pubsub
       })
 
       const groupsQuerySnapshot = await Promise.all(groupPromises)
-
-      //console.log("groupsQuerySnapshot: " + JSON.stringify(groupsQuerySnapshot))
-
 
       groupsQuerySnapshot.forEach((usersQuerySnapshot, index) => {
         if (usersQuerySnapshot.empty) {
@@ -512,7 +635,7 @@ exports.scheduledRewardCheck = functions.pubsub
           message.notification.title = "You have won the reward!"
           message.notification.body = "'" + rewards[index].name + "' is for you to claim! Congratulations for " +
             " doing the most work in your group! " +
-            "The reward has been reset according to its frequency."
+            "The reward has been reset according to its frequency for the next claim."
 
           console.log("Sending message: " + JSON.stringify(message))
 
