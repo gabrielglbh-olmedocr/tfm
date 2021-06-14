@@ -1,11 +1,18 @@
 {
   "applinks": {
     "apps": [],
-    "details": [{
-      "appID": "Q26F7S66DB.com.raulolmedo.kelo",
-      "paths": [
-        "*"
-      ]
-    }]
+    "details": [
+      {
+        "appID": "Q26F7S66DB.com.raulolmedo.kelo",
+        "paths": [
+          "/group"
+        ],
+        "components": [
+          {
+            "/": "/group"
+          }
+        ]
+      }
+    ]
   }
 }
