@@ -1,0 +1,3 @@
+firebase-key.json filter=git-crypt diff=git-crypt
+android-testers.csv filter=git-crypt diff=git-crypt
+ios-testers.csv filter=git-crypt diff=git-crypt
